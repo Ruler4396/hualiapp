@@ -27,6 +27,7 @@ import {CommonConstants} from '../common/constants/CommonConstants';
 import Home from "../view/Home"
 import Setting from "../view/Setting"
 import Connect from "./Connect";
+import { Anniversary } from './Anniversary';
 
 import App from '@system.app';
 
@@ -106,7 +107,17 @@ struct MainPage {
       .tabBar(this.TabBuilder(CommonConstants.CONNECT_TITLE,CommonConstants.CONNECT_TAB_INDEX,
         $r('app.media.ic_public_message_filled'), $r('app.media.ic_public_message')))
 
-      // 第三个标签页：我的
+      // 第三个标签页：纪念日
+      TabContent() {                                   // 创建标签页内容
+        Anniversary()                                 // 渲染纪念日组件
+      }
+      .padding({ left: $r('app.float.mainPage_padding'), right: $r('app.float.mainPage_padding') }) // 设置左右内边距
+      .backgroundColor($r('app.color.mainPage_backgroundColor')) // 设置背景颜色
+      // 设置自定义标签栏：传入标题、索引和图标资源
+      .tabBar(this.TabBuilder('纪念日', 2,
+        $r('app.media.ic_public_message_filled'), $r('app.media.ic_public_message')))
+
+      // 第四个标签页：我的
       TabContent() {                                   // 创建标签页内容
         Setting()                                      // 渲染设置页面组件
       }
