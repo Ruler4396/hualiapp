@@ -1,0 +1,573 @@
+�r@��assertions�code�customTransformCache�dependencies�id�meta�moduleSideEffects�originalCode�originalSourcemap�resolvedIds�sourcemapChain�syntheticNamedExports�transformDependencies�transformFiles�cacheAst�rA��Z�if (!("finalizeConstruction" in ViewPU.prototype)) {
+    Reflect.set(ViewPU.prototype, "finalizeConstruction", () => { });
+}
+interface Setting_Params {
+}
+/*
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// 这段代码通过 ArkUI 框架构建了一个功能完整的设置页面，包含标题、账户信息、设置选项列表和操作按钮。
+// 代码结构清晰，使用了组件化设计和数据绑定，使得页面内容易于管理和扩展。每个部分都通过布局组件（如 Row、Column、List）
+// 和样式属性精心组织，提供了良好的用户体验。
+import CommonConstants from '../common/constants/CommonConstants';
+import type ItemData from '../viewmodel/ItemData';
+// 导入数据模型 ItemData，用于定义设置项的数据结构，例如图标、标题等。
+import mainViewModel from '../viewmodel/MainViewModel';
+// 使用 @Component 装饰器，标记该结构体为一个 UI 组件。
+export default class Setting extends ViewPU {
+    constructor(parent, params, __localStorage, elmtId = -1, paramsLambda = undefined, extraInfo) {
+        super(parent, __localStorage, elmtId, extraInfo);
+        if (typeof paramsLambda === "function") {
+            this.paramsGenerator_ = paramsLambda;
+        }
+        this.setInitiallyProvidedValue(params);
+        this.finalizeConstruction();
+    }
+    setInitiallyProvidedValue(params: Setting_Params) {
+    }
+    updateStateVars(params: Setting_Params) {
+    }
+    purgeVariableDependenciesOnElmtId(rmElmtId) {
+    }
+    aboutToBeDeleted() {
+        SubscriberManager.Get().delete(this.id__());
+        this.aboutToBeDeletedInternal();
+    }
+    // 定义并导出 Setting 组件，作为设置页面的主组件。
+    settingCell(item: ItemData, parent = null) {
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 定义一个构建器方法 settingCell，用于创建设置项的 UI，参数 item 为单个设置项的数据。
+            Row.create();
+            Row.debugLine("entry/src/main/ets/view/Setting.ets(39:5)", "entry");
+            // 定义一个构建器方法 settingCell，用于创建设置项的 UI，参数 item 为单个设置项的数据。
+            Row.justifyContent(FlexAlign.SpaceBetween);
+            // 定义一个构建器方法 settingCell，用于创建设置项的 UI，参数 item 为单个设置项的数据。
+            Row.width(CommonConstants.FULL_PARENT);
+            // 定义一个构建器方法 settingCell，用于创建设置项的 UI，参数 item 为单个设置项的数据。
+            Row.padding({
+                left: { "id": 16777347, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" },
+                // 设置左侧内边距为资源文件中定义的 setting_settingCell_left。
+                right: { "id": 16777348, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" }
+                // 设置右侧内边距为资源文件中定义的 setting_settingCell_right。
+            });
+        }, Row);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 使用 Row 组件创建一个水平行布局，组织设置项的内容。
+            Row.create({ space: CommonConstants.COMMON_SPACE });
+            Row.debugLine("entry/src/main/ets/view/Setting.ets(41:7)", "entry");
+        }, Row);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 内部嵌套一个 Row 组件，设置子组件之间的间距为 COMMON_SPACE。
+            Image.create(item.img);
+            Image.debugLine("entry/src/main/ets/view/Setting.ets(43:9)", "entry");
+            // 内部嵌套一个 Row 组件，设置子组件之间的间距为 COMMON_SPACE。
+            Image.width({ "id": 16777349, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            // 内部嵌套一个 Row 组件，设置子组件之间的间距为 COMMON_SPACE。
+            Image.height({ "id": 16777349, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+        }, Image);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 设置图标高度为资源文件中定义的 setting_size。
+            Text.create(item.title);
+            Text.debugLine("entry/src/main/ets/view/Setting.ets(49:9)", "entry");
+            // 设置图标高度为资源文件中定义的 setting_size。
+            Text.fontSize({ "id": 16777323, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+        }, Text);
+        // 设置图标高度为资源文件中定义的 setting_size。
+        Text.pop();
+        // 使用 Row 组件创建一个水平行布局，组织设置项的内容。
+        Row.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            If.create();
+            if (item.others === undefined) {
+                this.ifElseBranchUpdateFunction(0, () => {
+                    this.observeComponentCreation2((elmtId, isInitialRender) => {
+                        // 判断 item.others 是否未定义（即没有额外信息）。
+                        Image.create({ "id": 16777355, "type": 20000, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+                        Image.debugLine("entry/src/main/ets/view/Setting.ets(57:9)", "entry");
+                        // 判断 item.others 是否未定义（即没有额外信息）。
+                        Image.width({ "id": 16777338, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+                        // 判断 item.others 是否未定义（即没有额外信息）。
+                        Image.height({ "id": 16777337, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+                    }, Image);
+                });
+            }
+            else {
+                this.ifElseBranchUpdateFunction(1, () => {
+                    this.observeComponentCreation2((elmtId, isInitialRender) => {
+                        // 如果 item.others 有值（例如开关状态）。
+                        Toggle.create({ type: ToggleType.Switch, isOn: false });
+                        Toggle.debugLine("entry/src/main/ets/view/Setting.ets(65:9)", "entry");
+                    }, Toggle);
+                    // 如果 item.others 有值（例如开关状态）。
+                    Toggle.pop();
+                });
+            }
+        }, If);
+        If.pop();
+        // 定义一个构建器方法 settingCell，用于创建设置项的 UI，参数 item 为单个设置项的数据。
+        Row.pop();
+    }
+    initialRender() {
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 定义组件的构建方法，描述页面的整体 UI 结构。
+            Scroll.create();
+            Scroll.debugLine("entry/src/main/ets/view/Setting.ets(83:5)", "entry");
+        }, Scroll);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 创建一个可滚动容器，包裹整个页面内容，支持上下滚动。
+            Column.create({ space: CommonConstants.COMMON_SPACE });
+            Column.debugLine("entry/src/main/ets/view/Setting.ets(85:7)", "entry");
+            // 创建一个可滚动容器，包裹整个页面内容，支持上下滚动。
+            Column.height(CommonConstants.FULL_PARENT);
+        }, Column);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 使用 Column 组件创建一个垂直列布局，子组件间距为 COMMON_SPACE。
+            // 标题部分
+            Column.create();
+            Column.debugLine("entry/src/main/ets/view/Setting.ets(89:9)", "entry");
+            // 使用 Column 组件创建一个垂直列布局，子组件间距为 COMMON_SPACE。
+            // 标题部分
+            Column.width(CommonConstants.FULL_PARENT);
+            // 使用 Column 组件创建一个垂直列布局，子组件间距为 COMMON_SPACE。
+            // 标题部分
+            Column.alignItems(HorizontalAlign.Start);
+        }, Column);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 创建一个列布局，用于放置标题。
+            Text.create({ "id": 16777244, "type": 10003, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            Text.debugLine("entry/src/main/ets/view/Setting.ets(91:11)", "entry");
+            // 创建一个列布局，用于放置标题。
+            Text.fontWeight(FontWeight.Medium);
+            // 创建一个列布局，用于放置标题。
+            Text.fontSize({ "id": 16777328, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            // 创建一个列布局，用于放置标题。
+            Text.margin({ top: { "id": 16777320, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" } });
+            // 创建一个列布局，用于放置标题。
+            Text.padding({ left: { "id": 16777321, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" } });
+        }, Text);
+        // 创建一个列布局，用于放置标题。
+        Text.pop();
+        // 使用 Column 组件创建一个垂直列布局，子组件间距为 COMMON_SPACE。
+        // 标题部分
+        Column.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 设置子组件（标题）水平左对齐。
+            // 账户信息部分
+            Row.create();
+            Row.debugLine("entry/src/main/ets/view/Setting.ets(108:9)", "entry");
+            // 设置子组件（标题）水平左对齐。
+            // 账户信息部分
+            Row.margin({ top: { "id": 16777332, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" } });
+            // 设置子组件（标题）水平左对齐。
+            // 账户信息部分
+            Row.alignItems(VerticalAlign.Center);
+            // 设置子组件（标题）水平左对齐。
+            // 账户信息部分
+            Row.width(CommonConstants.FULL_PARENT);
+            // 设置子组件（标题）水平左对齐。
+            // 账户信息部分
+            Row.height({ "id": 16777331, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            // 设置子组件（标题）水平左对齐。
+            // 账户信息部分
+            Row.backgroundColor(Color.White);
+            // 设置子组件（标题）水平左对齐。
+            // 账户信息部分
+            Row.padding({ left: { "id": 16777333, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" } });
+            // 设置子组件（标题）水平左对齐。
+            // 账户信息部分
+            Row.borderRadius({ "id": 16777329, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+        }, Row);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 创建一个行布局，用于展示账户信息。
+            Image.create({ "id": 16777388, "type": 20000, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            Image.debugLine("entry/src/main/ets/view/Setting.ets(110:11)", "entry");
+            // 创建一个行布局，用于展示账户信息。
+            Image.width({ "id": 16777334, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            // 创建一个行布局，用于展示账户信息。
+            Image.height({ "id": 16777334, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+        }, Image);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 设置头像高度为资源文件中定义的 setting_account_size。
+            Column.create();
+            Column.debugLine("entry/src/main/ets/view/Setting.ets(116:11)", "entry");
+            // 设置头像高度为资源文件中定义的 setting_account_size。
+            Column.alignItems(HorizontalAlign.Start);
+            // 设置头像高度为资源文件中定义的 setting_account_size。
+            Column.margin({ left: { "id": 16777332, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" } });
+        }, Column);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 创建一个列布局，用于展示用户名和邮箱。
+            Text.create({ "id": 16777265, "type": 10003, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            Text.debugLine("entry/src/main/ets/view/Setting.ets(118:13)", "entry");
+            // 创建一个列布局，用于展示用户名和邮箱。
+            Text.fontSize({ "id": 16777330, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+        }, Text);
+        // 创建一个列布局，用于展示用户名和邮箱。
+        Text.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 设置字体大小为资源文件中定义的 setting_account_fontSize。
+            Text.create({ "id": 16777264, "type": 10003, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            Text.debugLine("entry/src/main/ets/view/Setting.ets(122:13)", "entry");
+            // 设置字体大小为资源文件中定义的 setting_account_fontSize。
+            Text.fontSize({ "id": 16777302, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            // 设置字体大小为资源文件中定义的 setting_account_fontSize。
+            Text.margin({ top: { "id": 16777345, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" } });
+        }, Text);
+        // 设置字体大小为资源文件中定义的 setting_account_fontSize。
+        Text.pop();
+        // 设置头像高度为资源文件中定义的 setting_account_size。
+        Column.pop();
+        // 设置子组件（标题）水平左对齐。
+        // 账户信息部分
+        Row.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 设置圆角半径为资源文件中定义的 setting_account_borderRadius。
+            // 设置选项列表部分
+            List.create();
+            List.debugLine("entry/src/main/ets/view/Setting.ets(150:9)", "entry");
+            // 设置圆角半径为资源文件中定义的 setting_account_borderRadius。
+            // 设置选项列表部分
+            List.scrollBar(BarState.Off);
+            // 设置圆角半径为资源文件中定义的 setting_account_borderRadius。
+            // 设置选项列表部分
+            List.backgroundColor(Color.White);
+            // 设置圆角半径为资源文件中定义的 setting_account_borderRadius。
+            // 设置选项列表部分
+            List.width(CommonConstants.FULL_PARENT);
+            // 设置圆角半径为资源文件中定义的 setting_account_borderRadius。
+            // 设置选项列表部分
+            List.height(CommonConstants.SET_LIST_WIDTH);
+            // 设置圆角半径为资源文件中定义的 setting_account_borderRadius。
+            // 设置选项列表部分
+            List.divider({
+                strokeWidth: { "id": 16777344, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" },
+                // 设置分隔线宽度为资源文件中定义的 setting_list_strokeWidth。
+                color: Color.Grey,
+                // 设置分隔线颜色为灰色。
+                startMargin: { "id": 16777343, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" },
+                // 设置分隔线左侧间距为资源文件中定义的 setting_list_startMargin。
+                endMargin: { "id": 16777340, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" }
+                // 设置分隔线右侧间距为资源文件中定义的 setting_list_endMargin。
+            });
+            // 设置圆角半径为资源文件中定义的 setting_account_borderRadius。
+            // 设置选项列表部分
+            List.borderRadius({ "id": 16777339, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            // 设置圆角半径为资源文件中定义的 setting_account_borderRadius。
+            // 设置选项列表部分
+            List.padding({ top: { "id": 16777342, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" }, bottom: { "id": 16777342, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" } });
+        }, List);
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 创建一个 List 组件，用于展示设置选项列表。
+            ForEach.create();
+            const forEachItemGenFunction = _item => {
+                const item = _item;
+                {
+                    const itemCreation = (elmtId, isInitialRender) => {
+                        ViewStackProcessor.StartGetAccessRecordingFor(elmtId);
+                        itemCreation2(elmtId, isInitialRender);
+                        if (!isInitialRender) {
+                            // 遍历 mainViewModel.getSettingListData() 返回的设置项数据。
+                            ListItem.pop();
+                        }
+                        ViewStackProcessor.StopGetAccessRecording();
+                    };
+                    const itemCreation2 = (elmtId, isInitialRender) => {
+                        ListItem.create(deepRenderFunction, true);
+                        // 遍历 mainViewModel.getSettingListData() 返回的设置项数据。
+                        ListItem.height({ "id": 16777341, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+                        ListItem.debugLine("entry/src/main/ets/view/Setting.ets(154:13)", "entry");
+                    };
+                    const deepRenderFunction = (elmtId, isInitialRender) => {
+                        itemCreation(elmtId, isInitialRender);
+                        // 创建一个列表项。
+                        this.settingCell.bind(this)(item);
+                        // 遍历 mainViewModel.getSettingListData() 返回的设置项数据。
+                        ListItem.pop();
+                    };
+                    this.observeComponentCreation2(itemCreation2, ListItem);
+                    // 遍历 mainViewModel.getSettingListData() 返回的设置项数据。
+                    ListItem.pop();
+                }
+            };
+            this.forEachUpdateFunction(elmtId, mainViewModel.getSettingListData(), forEachItemGenFunction, (item: ItemData) => JSON.stringify(item), false, false);
+        }, ForEach);
+        // 创建一个 List 组件，用于展示设置选项列表。
+        ForEach.pop();
+        // 设置圆角半径为资源文件中定义的 setting_account_borderRadius。
+        // 设置选项列表部分
+        List.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 设置列表上下内边距为资源文件中定义的 setting_list_padding。
+            // 空白占位部分
+            Blank.create();
+            Blank.debugLine("entry/src/main/ets/view/Setting.ets(189:9)", "entry");
+        }, Blank);
+        // 设置列表上下内边距为资源文件中定义的 setting_list_padding。
+        // 空白占位部分
+        Blank.pop();
+        this.observeComponentCreation2((elmtId, isInitialRender) => {
+            // 添加一个空白组件，占据剩余空间，使按钮固定在底部。
+            // 操作按钮部分
+            Button.createWithLabel({ "id": 16777266, "type": 10003, params: [], "bundleName": "com.example.component", "moduleName": "entry" }, { type: ButtonType.Capsule });
+            Button.debugLine("entry/src/main/ets/view/Setting.ets(193:9)", "entry");
+            // 添加一个空白组件，占据剩余空间，使按钮固定在底部。
+            // 操作按钮部分
+            Button.width(CommonConstants.BUTTON_WIDTH);
+            // 添加一个空白组件，占据剩余空间，使按钮固定在底部。
+            // 操作按钮部分
+            Button.height({ "id": 16777303, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            // 添加一个空白组件，占据剩余空间，使按钮固定在底部。
+            // 操作按钮部分
+            Button.fontSize({ "id": 16777323, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            // 添加一个空白组件，占据剩余空间，使按钮固定在底部。
+            // 操作按钮部分
+            Button.fontColor({ "id": 16777381, "type": 10001, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            // 添加一个空白组件，占据剩余空间，使按钮固定在底部。
+            // 操作按钮部分
+            Button.fontWeight(FontWeight.Medium);
+            // 添加一个空白组件，占据剩余空间，使按钮固定在底部。
+            // 操作按钮部分
+            Button.backgroundColor({ "id": 16777380, "type": 10001, params: [], "bundleName": "com.example.component", "moduleName": "entry" });
+            // 添加一个空白组件，占据剩余空间，使按钮固定在底部。
+            // 操作按钮部分
+            Button.margin({ bottom: { "id": 16777336, "type": 10002, params: [], "bundleName": "com.example.component", "moduleName": "entry" } });
+        }, Button);
+        // 添加一个空白组件，占据剩余空间，使按钮固定在底部。
+        // 操作按钮部分
+        Button.pop();
+        // 创建一个可滚动容器，包裹整个页面内容，支持上下滚动。
+        Column.pop();
+        // 定义组件的构建方法，描述页面的整体 UI 结构。
+        Scroll.pop();
+    }
+    rerender() {
+        this.updateDirtyElements();
+    }
+}
+�]C:\Users\Acer\Desktop\ArkTSComponents\entry\src\main\ets\common\constants\CommonConstants.ets�TC:\Users\Acer\Desktop\ArkTSComponents\entry\src\main\ets\viewmodel\MainViewModel.ets�IC:\Users\Acer\Desktop\ArkTSComponents\entry\src\main\ets\view\Setting.ets�rB��moduleName�isLocalDependency�isNodeEntryFile�pkgPath�belongProjectPath�pkgName�pkgVersion�dependencyPkgInfo�belongModulePath�hostModulesInfo�entry���+C:\Users\Acer\Desktop\ArkTSComponents\entry�%C:\Users\Acer\Desktop\ArkTSComponents�entry�1.0.0�  �+C:\Users\Acer\Desktop\ArkTSComponents\entry��rC��hostDependencyName�hostModuleName�../view/Setting�entry��-P/*
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// 这段代码通过 ArkUI 框架构建了一个功能完整的设置页面，包含标题、账户信息、设置选项列表和操作按钮。
+// 代码结构清晰，使用了组件化设计和数据绑定，使得页面内容易于管理和扩展。每个部分都通过布局组件（如 Row、Column、List）
+// 和样式属性精心组织，提供了良好的用户体验。
+
+import CommonConstants from '../common/constants/CommonConstants';
+// 导入通用常量模块，包含应用程序中使用的常量值，例如宽度、高度、间距等。
+
+import ItemData from '../viewmodel/ItemData';
+// 导入数据模型 ItemData，用于定义设置项的数据结构，例如图标、标题等。
+
+import mainViewModel from '../viewmodel/MainViewModel';
+// 导入主视图模型 mainViewModel，提供设置页面所需的数据，例如设置项列表数据。
+
+/**
+ * Setting tab content
+ * 设置标签页内容
+ */
+@Component
+  // 使用 @Component 装饰器，标记该结构体为一个 UI 组件。
+export default struct Setting {
+  // 定义并导出 Setting 组件，作为设置页面的主组件。
+
+  @Builder settingCell(item: ItemData) {
+    // 定义一个构建器方法 settingCell，用于创建设置项的 UI，参数 item 为单个设置项的数据。
+    Row() {
+      // 使用 Row 组件创建一个水平行布局，组织设置项的内容。
+      Row({ space: CommonConstants.COMMON_SPACE }) {
+        // 内部嵌套一个 Row 组件，设置子组件之间的间距为 COMMON_SPACE。
+        Image(item.img)
+          // 显示设置项的图标，图标来源为 item.img。
+          .width($r('app.float.setting_size'))
+            // 设置图标宽度为资源文件中定义的 setting_size。
+          .height($r('app.float.setting_size'))
+        // 设置图标高度为资源文件中定义的 setting_size。
+        Text(item.title)
+          // 显示设置项的标题，文本内容为 item.title。
+          .fontSize($r('app.float.normal_text_size'))
+        // 设置文本字体大小为资源文件中定义的 normal_text_size。
+      }
+
+      if (item.others === undefined) {
+        // 判断 item.others 是否未定义（即没有额外信息）。
+        Image($r('app.media.right_grey'))
+          // 显示一个灰色右箭头图标，表示可跳转。
+          .width($r('app.float.setting_jump_width'))
+            // 设置箭头图标宽度为资源文件中定义的 setting_jump_width。
+          .height($r('app.float.setting_jump_height'))
+        // 设置箭头图标高度为资源文件中定义的 setting_jump_height。
+      } else {
+        // 如果 item.others 有值（例如开关状态）。
+        Toggle({ type: ToggleType.Switch, isOn: false })
+        // 显示一个开关控件，类型为 Switch，默认关闭。
+      }
+    }
+    .justifyContent(FlexAlign.SpaceBetween)
+    // 设置行内元素两端对齐（图标和文本在左侧，箭头或开关在右侧）。
+    .width(CommonConstants.FULL_PARENT)
+    // 设置行宽度为父组件的 100%。
+    .padding({
+      left: $r('app.float.setting_settingCell_left'),
+      // 设置左侧内边距为资源文件中定义的 setting_settingCell_left。
+      right: $r('app.float.setting_settingCell_right')
+      // 设置右侧内边距为资源文件中定义的 setting_settingCell_right。
+    })
+  }
+
+  build() {
+    // 定义组件的构建方法，描述页面的整体 UI 结构。
+    Scroll() {
+      // 创建一个可滚动容器，包裹整个页面内容，支持上下滚动。
+      Column({ space: CommonConstants.COMMON_SPACE }) {
+        // 使用 Column 组件创建一个垂直列布局，子组件间距为 COMMON_SPACE。
+
+        // 标题部分
+        Column() {
+          // 创建一个列布局，用于放置标题。
+          Text($r('app.string.mainPage_tabTitles_mine'))
+            // 显示“我的”标题，文本内容从资源文件中获取。
+            .fontWeight(FontWeight.Medium)
+              // 设置字体粗细为中等。
+            .fontSize($r('app.float.page_title_text_size'))
+              // 设置字体大小为资源文件中定义的 page_title_text_size。
+            .margin({ top: $r('app.float.mainPage_tabTitles_margin') })
+              // 设置上外边距为资源文件中定义的 mainPage_tabTitles_margin。
+            .padding({ left: $r('app.float.mainPage_tabTitles_padding') })
+          // 设置左侧内边距为资源文件中定义的 mainPage_tabTitles_padding。
+        }
+        .width(CommonConstants.FULL_PARENT)
+        // 设置标题区域宽度为父组件的 100%。
+        .alignItems(HorizontalAlign.Start)
+        // 设置子组件（标题）水平左对齐。
+
+        // 账户信息部分
+        Row() {
+          // 创建一个行布局，用于展示账户信息。
+          Image($r('app.media.account'))
+            // 显示用户头像，图标从资源文件中获取。
+            .width($r('app.float.setting_account_size'))
+              // 设置头像宽度为资源文件中定义的 setting_account_size。
+            .height($r('app.float.setting_account_size'))
+          // 设置头像高度为资源文件中定义的 setting_account_size。
+          Column() {
+            // 创建一个列布局，用于展示用户名和邮箱。
+            Text($r('app.string.setting_account_name'))
+              // 显示用户名，文本内容从资源文件中获取。
+              .fontSize($r('app.float.setting_account_fontSize'))
+            // 设置字体大小为资源文件中定义的 setting_account_fontSize。
+            Text($r('app.string.setting_account_email'))
+              // 显示用户邮箱，文本内容从资源文件中获取。
+              .fontSize($r('app.float.little_text_size'))
+                // 设置字体大小为资源文件中定义的 little_text_size。
+              .margin({ top: $r('app.float.setting_name_margin') })
+            // 设置上外边距为资源文件中定义的 setting_name_margin。
+          }
+          .alignItems(HorizontalAlign.Start)
+          // 设置列内元素（用户名和邮箱）水平左对齐。
+          .margin({ left: $r('app.float.setting_account_margin') })
+          // 设置列的左侧外边距为资源文件中定义的 setting_account_margin。
+        }
+        .margin({ top: $r('app.float.setting_account_margin') })
+        // 设置账户信息行的上外边距为资源文件中定义的 setting_account_margin。
+        .alignItems(VerticalAlign.Center)
+        // 设置行内元素（头像和文本）垂直居中对齐。
+        .width(CommonConstants.FULL_PARENT)
+        // 设置行宽度为父组件的 100%。
+        .height($r('app.float.setting_account_height'))
+        // 设置行高度为资源文件中定义的 setting_account_height。
+        .backgroundColor(Color.White)
+        // 设置背景颜色为白色。
+        .padding({ left: $r('app.float.setting_account_padding') })
+        // 设置左侧内边距为资源文件中定义的 setting_account_padding。
+        .borderRadius($r('app.float.setting_account_borderRadius'))
+        // 设置圆角半径为资源文件中定义的 setting_account_borderRadius。
+
+        // 设置选项列表部分
+        List() {
+          // 创建一个 List 组件，用于展示设置选项列表。
+          ForEach(mainViewModel.getSettingListData(), (item: ItemData) => {
+            // 遍历 mainViewModel.getSettingListData() 返回的设置项数据。
+            ListItem() {
+              // 创建一个列表项。
+              this.settingCell(item)
+              // 调用 settingCell 构建器方法，创建设置项的 UI。
+            }
+            .height($r('app.float.setting_list_height'))
+            // 设置列表项高度为资源文件中定义的 setting_list_height。
+          }, (item: ItemData) => JSON.stringify(item))
+          // 使用 JSON.stringify(item) 作为列表项的唯一标识符。
+        }
+        .scrollBar(BarState.Off)
+        // 隐藏列表的滚动条。
+        .backgroundColor(Color.White)
+        // 设置列表背景颜色为白色。
+        .width(CommonConstants.FULL_PARENT)
+        // 设置列表宽度为父组件的 100%。
+        .height(CommonConstants.SET_LIST_WIDTH)
+        // 设置列表高度为常量 SET_LIST_WIDTH。
+        .divider({
+          strokeWidth: $r('app.float.setting_list_strokeWidth'),
+          // 设置分隔线宽度为资源文件中定义的 setting_list_strokeWidth。
+          color: Color.Grey,
+          // 设置分隔线颜色为灰色。
+          startMargin: $r('app.float.setting_list_startMargin'),
+          // 设置分隔线左侧间距为资源文件中定义的 setting_list_startMargin。
+          endMargin: $r('app.float.setting_list_endMargin')
+          // 设置分隔线右侧间距为资源文件中定义的 setting_list_endMargin。
+        })
+        // 为列表项添加分隔线。
+        .borderRadius($r('app.float.setting_list_borderRadius'))
+        // 设置列表圆角半径为资源文件中定义的 setting_list_borderRadius。
+        .padding({ top: $r('app.float.setting_list_padding'), bottom: $r('app.float.setting_list_padding') })
+        // 设置列表上下内边距为资源文件中定义的 setting_list_padding。
+
+        // 空白占位部分
+        Blank()
+        // 添加一个空白组件，占据剩余空间，使按钮固定在底部。
+
+        // 操作按钮部分
+        Button($r('app.string.setting_button'), { type: ButtonType.Capsule })
+          // 创建一个胶囊形状的按钮，文本内容从资源文件中获取。
+          .width(CommonConstants.BUTTON_WIDTH)
+            // 设置按钮宽度为常量 BUTTON_WIDTH。
+          .height($r('app.float.login_button_height'))
+            // 设置按钮高度为资源文件中定义的 login_button_height。
+          .fontSize($r('app.float.normal_text_size'))
+            // 设置字体大小为资源文件中定义的 normal_text_size。
+          .fontColor($r('app.color.setting_button_fontColor'))
+            // 设置字体颜色为资源文件中定义的 setting_button_fontColor。
+          .fontWeight(FontWeight.Medium)
+            // 设置字体粗细为中等。
+          .backgroundColor($r('app.color.setting_button_backgroundColor'))
+            // 设置背景颜色为资源文件中定义的 setting_button_backgroundColor。
+          .margin({ bottom: $r('app.float.setting_button_bottom') })
+        // 设置下外边距为资源文件中定义的 setting_button_bottom。
+      }
+      .height(CommonConstants.FULL_PARENT)
+      // 设置列高度为父组件的 100%，填充整个可滚动区域。
+    }
+  }
+}��rD��#../common/constants/CommonConstants�../viewmodel/MainViewModel�rE��assertions�external�id�meta�moduleSideEffects�resolvedBy�syntheticNamedExportsA��]C:\Users\Acer\Desktop\ArkTSComponents\entry\src\main\ets\common\constants\CommonConstants.etsAêoh-resolve�EA��TC:\Users\Acer\Desktop\ArkTSComponents\entry\src\main\ets\viewmodel\MainViewModel.etsAêoh-resolve�rF��missing�pluginìetsTransform�rG��version�file�sources�sourcesContent�names�mappings�������f��    ��   ��   ��   ��   ��   ��   ��   ��   ��  	 ��  
+ ��   ��   ��   ��   ��   ��   ��   ��   ��   ��   ��   ��   ��   ��   ��   ��   ��   ��   ��   ��   ��   ��    ��  ! ��  " ��  # ��  $ ��  % ��  & ��  ' ��  ( ��  ) ��  * ��  + ��  , ��  - ��  . ��  / ��  0 ��  1 ��  2 ��  3 ��  4 ��  5 ��  6 ��  7 ��  8 ��  9 ��  : ��  ; ��  < ��  = ��  > ��  ? ��  �@ ��  �A ��  �B ��  �C ��  �D ��  �E ��  �F ��  �G ��  �H ��  �I ��  �J ��  �K ��  �L ��  �M ��  �N ��  �O ��  �P ��  �Q ��  �R ��  �S ��  �T ��  �U ��  �V ��  �W ��  �X ��  �Y ��  �Z ��  �[ ��  �\ ��  �] ��  �^ ��  �_ ��  �` ��  �a ��  �b ��  �c ��  �d ��  �e ��  �f ��  �g ��  �h ��  �i ��  �j ��  �k ��  �l ��  �m ��  �n ��  �o ��  �p ��  �q ��  �r ��  �s ��  �t ��  �u ��  �v ��  �w ��  �x ��  �y ��  �z ��  �{ ��  �| ��  �} ��  �~ ��  � ��  ̀ ��  ́ ��  ̂ ��  ̃ ��  ̄ ��  ̅ ��  ̆ ��  ̇ ��  ̈ ��  ̉ ��  ̊ ��  ̋ ��  ̌ ��  ̍ ��  ̎ ��  ̏ ��  ̐ ��  ̑ ��  ̒ ��  ̓ ��  ̔ ��  ̕ ��  ̖ ��  ̗ ��  ̘ ��  ̙ ��  ̚ ��  ̛ ��  ̜ ��  ̝ ��  ̞ ��  ̟ ��  ̠ ��  ̡ ��  ̢ ��  ̣ ��  ̤ ��  ̥ ��  ̦ ��  ̧ ��  ̨ ��  ̩ ��  ̪ ��  ̫ ��  ̬ ��  ̭ ��  ̮ ��  ̯ ��  ̰ ��  ̱ ��  ̲ ��  ̳ ��  ̴ ��  ̵ ��  ̶ ��  ̷ ��  ̸ ��  ̹ ��  ̺ ��  ̻ ��  ̼ ��  ̽ ��  ̾ ��  ̿ ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �� ��  �  ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  �	 ��  �
+ ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  � ��  �  ��  �! ��  �" ��  �# ��  �$ ��  �% ��  �& ��  �' ��  �( ��  �) ��  �* ��  �+ ��  �, ��  �- ��  �. ��  �/ ��  �0 ��  �1 ��  �2 ��  �3 ��  �4 ��  �5 ��  �6 ��  �7 ��  �8 ��  �9 ��  �: ��  �; ��  �< ��  �= ��  �> ��  �? ��  �@ ��  �A ��  �B ��  �C ��  �D ��  �E ��  �F ��  �G ��  �H ��  �I ��  �J ��  �K ��  �L ��  �M ��  �N ��  �O ��  �P ��  �Q ��  �R ��  �S ��  �T ��  �U ��  �V ��  �W ��  �X ��  �Y ��  �Z ��  �[ ��  �\ ��  �] ��  �^ ��  �_ ��  �` ��  �a ��  �b ��  �c ��  �d ��  �rH��dynamicImportCache�exportAllDeclarationCache�exportNamedDeclarationCache�importCache�����rI��type�start�end�specifiers�source�ImportDeclaration���ґ�rJ��type�start�end�local�ImportDefaultSpecifier�����rK��type�start�end�name�Identifier�����CommonConstants�rL��type�start�end�value�raw�Literal�����#../common/constants/CommonConstants�%'../common/constants/CommonConstants'I�ImportDeclaration�0�g�J�ImportDefaultSpecifier�7�DK�Identifier�7�D�mainViewModelL�Literal�J�f�../viewmodel/MainViewModel�'../viewmodel/MainViewModel'
