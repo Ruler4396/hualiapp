@@ -7,6 +7,7 @@ interface AnniversaryItem {
   title: string;
   date: string;
   days: number;
+  isFavorite: boolean;
 }
 
 interface DatePickerResult {
@@ -15,23 +16,46 @@ interface DatePickerResult {
   day: number;
 }
 
-@Entry
 @Component
 export struct Anniversary {
   @State anniversaryList: AnniversaryItem[] = [];
   @State showAddDialog: boolean = false;
   @State newTitle: string = '';
   @State newDate: string = '';
+  @State currentFavoriteIndex: number = 0;
   private preferences: preferences.Preferences | null = null;
+  private animationDuration: number = 300;
+  private favoriteTimer: number = -1;
 
   async aboutToAppear() {
-    // 初始化本地存储
     try {
       const context = getContext(this);
       this.preferences = await preferences.getPreferences(context, 'anniversary');
       await this.loadAnniversaryList();
+      this.startFavoriteTimer();
     } catch (err) {
       console.error('Failed to initialize preferences:', err);
+    }
+  }
+
+  aboutToDisappear() {
+    this.stopFavoriteTimer();
+  }
+
+  startFavoriteTimer() {
+    this.stopFavoriteTimer();
+    const favoriteItems = this.anniversaryList.filter(item => item.isFavorite);
+    if (favoriteItems.length > 1) {
+      this.favoriteTimer = setInterval(() => {
+        this.currentFavoriteIndex = (this.currentFavoriteIndex + 1) % favoriteItems.length;
+      }, 2000);
+    }
+  }
+
+  stopFavoriteTimer() {
+    if (this.favoriteTimer !== -1) {
+      clearInterval(this.favoriteTimer);
+      this.favoriteTimer = -1;
     }
   }
 
@@ -48,11 +72,13 @@ export struct Anniversary {
           id: item.id,
           title: item.title,
           date: item.date,
-          days: this.calculateDays(item.date)
+          days: this.calculateDays(item.date),
+          isFavorite: item.isFavorite || false
         };
         newList.push(newItem);
       }
       this.anniversaryList = newList;
+      this.startFavoriteTimer();
     } catch (err) {
       console.error('Failed to load anniversary list:', err);
     }
@@ -60,7 +86,9 @@ export struct Anniversary {
 
   calculateDays(dateStr: string): number {
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const targetDate = new Date(dateStr);
+    targetDate.setHours(0, 0, 0, 0);
     const diffTime = Math.abs(targetDate.getTime() - today.getTime());
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
@@ -71,14 +99,14 @@ export struct Anniversary {
         id: Date.now().toString(),
         title: this.newTitle,
         date: this.newDate,
-        days: this.calculateDays(this.newDate)
+        days: this.calculateDays(this.newDate),
+        isFavorite: false
       };
       this.anniversaryList.push(newItem);
       this.showAddDialog = false;
       this.newTitle = '';
       this.newDate = '';
       
-      // 保存到本地存储
       try {
         if (!this.preferences) {
           return;
@@ -91,78 +119,181 @@ export struct Anniversary {
     }
   }
 
+  async toggleFavorite(id: string) {
+    const index = this.anniversaryList.findIndex(item => item.id === id);
+    if (index !== -1) {
+      this.anniversaryList[index].isFavorite = !this.anniversaryList[index].isFavorite;
+      try {
+        if (!this.preferences) {
+          return;
+        }
+        await this.preferences.put('anniversaryList', JSON.stringify(this.anniversaryList));
+        await this.preferences.flush();
+        this.startFavoriteTimer();
+      } catch (err) {
+        console.error('Failed to update anniversary list:', err);
+      }
+    }
+  }
+
   async deleteAnniversary(id: string) {
     this.anniversaryList = this.anniversaryList.filter(item => item.id !== id);
-    
-    // 更新本地存储
     try {
       if (!this.preferences) {
         return;
       }
       await this.preferences.put('anniversaryList', JSON.stringify(this.anniversaryList));
       await this.preferences.flush();
+      this.startFavoriteTimer();
     } catch (err) {
       console.error('Failed to update anniversary list:', err);
     }
   }
 
-  build() {
-    Stack() {
-      Column() {
-        // 标题栏
-        Row() {
-          Text('纪念日')
-            .fontSize(20)
-            .fontWeight(FontWeight.Medium)
-          Blank()
-          Button('添加')
-            .onClick(() => {
-              this.showAddDialog = true;
-            })
-        }
-        .width('100%')
-        .padding(16)
-        .backgroundColor('#FFFFFF')
-
-        // 纪念日列表
-        List() {
-          ForEach(this.anniversaryList, (item: AnniversaryItem) => {
-            ListItem() {
-              Row() {
-                Column() {
-                  Text(item.title)
-                    .fontSize(16)
-                    .fontWeight(FontWeight.Medium)
-                  Text(item.date)
-                    .fontSize(14)
-                    .margin({ top: 4 })
-                    .fontColor('#666666')
-                }
-                .layoutWeight(1)
-
-                Text(item.days + '天')
-                  .fontSize(16)
-                  .fontColor('#FF6B6B')
-
-                Button('删除')
-                  .fontSize(14)
-                  .backgroundColor('#FF6B6B')
-                  .margin({ left: 8 })
-                  .onClick(() => {
-                    this.deleteAnniversary(item.id);
-                  })
-              }
-              .width('100%')
-              .padding(16)
-              .backgroundColor('#FFFFFF')
-              .borderRadius(8)
-              .margin({ bottom: 8 })
+  @Builder
+  FavoriteSection() {
+    Column() {
+      if (this.anniversaryList.some(item => item.isFavorite)) {
+        Swiper() {
+          ForEach(this.anniversaryList.filter(item => item.isFavorite), (item: AnniversaryItem) => {
+            Column() {
+              Text(item.title)
+                .fontSize(24)
+                .fontWeight(FontWeight.Bold)
+                .margin({ bottom: 8 })
+              Text(item.date)
+                .fontSize(18)
+                .fontColor('#666666')
+                .margin({ bottom: 16 })
+              Text(item.days + '天')
+                .fontSize(32)
+                .fontColor('#FF6B6B')
+                .fontWeight(FontWeight.Bold)
             }
+            .width('100%')
+            .padding(24)
+            .backgroundColor('#FFFFFF')
+            .borderRadius(16)
+            .margin({ bottom: 16 })
+            .animation({
+              duration: this.animationDuration,
+              curve: Curve.EaseInOut
+            })
           })
         }
         .width('100%')
-        .padding(16)
+        .height('100%')
+        .autoPlay(true)
+        .interval(2000)
+        .indicator(true)
+        .loop(true)
+      } else {
+        Column() {
+          Text('暂无收藏的纪念日')
+            .fontSize(18)
+            .fontColor('#999999')
+        }
+        .width('100%')
+        .height('100%')
+        .justifyContent(FlexAlign.Center)
+      }
+    }
+    .width('100%')
+    .height('33%')
+    .padding(16)
+  }
+
+  @Builder
+  TimelineView() {
+    Column() {
+      ForEach(this.anniversaryList, (item: AnniversaryItem) => {
+        Row() {
+          Column() {
+            Circle()
+              .width(12)
+              .height(12)
+              .fill('#FF6B6B')
+            Line()
+              .width(2)
+              .height(60)
+              .backgroundColor('#FF6B6B')
+          }
+          .margin({ right: 16 })
+
+          Column() {
+            Row() {
+              Column() {
+                Text(item.title)
+                  .fontSize(16)
+                  .fontWeight(FontWeight.Medium)
+                Text(item.date)
+                  .fontSize(14)
+                  .margin({ top: 4 })
+                  .fontColor('#666666')
+              }
+              .layoutWeight(1)
+
+              Text(item.days + '天')
+                .fontSize(16)
+                .fontColor('#FF6B6B')
+
+              Image($r('app.media.favorite'))
+                .width(24)
+                .height(24)
+                .fillColor(item.isFavorite ? '#FFD700' : '#999999')
+                .margin({ left: 8 })
+                .onClick(() => {
+                  this.toggleFavorite(item.id);
+                })
+
+              Button('删除')
+                .fontSize(14)
+                .backgroundColor(item.isFavorite ? '#FFD700' : '#999999')
+                .margin({ left: 8 })
+                .onClick(() => {
+                  this.deleteAnniversary(item.id);
+                })
+            }
+            .width('100%')
+            .padding(16)
+            .backgroundColor('#FFFFFF')
+            .borderRadius(8)
+          }
+          .layoutWeight(1)
+        }
+        .width('100%')
+        .margin({ bottom: 16 })
+        .animation({
+          duration: this.animationDuration,
+          curve: Curve.EaseInOut
+        })
+      })
+    }
+    .width('100%')
+    .padding(16)
+  }
+
+  build() {
+    Stack() {
+      Column() {
+        // 收藏的纪念日展示区
+        this.FavoriteSection()
+
+        // 时间轴视图
+        Scroll() {
+          this.TimelineView()
+        }
+        .width('100%')
         .layoutWeight(1)
+
+        // 添加按钮
+        Button('添加纪念日')
+          .width('90%')
+          .height(48)
+          .margin({ bottom: 16 })
+          .onClick(() => {
+            this.showAddDialog = true;
+          })
       }
       .width('100%')
       .height('100%')
@@ -189,8 +320,18 @@ export struct Anniversary {
             end: new Date('2100-12-31'),
             selected: new Date()
           })
-            .onChange((value: DatePickerResult) => {
-              this.newDate = `${value.year}-${value.month}-${value.day}`;
+            .onDateChange((value: Date) => {
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+              const selectedDate = new Date(value);
+              selectedDate.setHours(0, 0, 0, 0);
+              
+              if (selectedDate.getTime() === today.getTime()) {
+                promptAction.showToast({ message: '不能选择今天作为纪念日' });
+                return;
+              }
+              
+              this.newDate = `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
             })
 
           Row() {
@@ -211,7 +352,23 @@ export struct Anniversary {
         .padding(16)
         .backgroundColor('#FFFFFF')
         .borderRadius(8)
+        .animation({
+          duration: this.animationDuration,
+          curve: Curve.EaseInOut
+        })
       }
+    }
+    .width('100%')
+    .height('100%')
+  }
+}
+
+@Entry
+@Component
+struct AnniversaryPage {
+  build() {
+    Column() {
+      Anniversary()
     }
     .width('100%')
     .height('100%')
