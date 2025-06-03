@@ -115,7 +115,7 @@ struct MainPage {
       .backgroundColor($r('app.color.mainPage_backgroundColor')) // 设置背景颜色
       // 设置自定义标签栏：传入标题、索引和图标资源
       .tabBar(this.TabBuilder('纪念日', 2,
-        $r('app.media.ic_public_message_filled'), $r('app.media.ic_public_message')))
+        $r('app.media.anniversary'), $r('app.media.anniversary')))
 
       // 第四个标签页：我的
       TabContent() {                                   // 创建标签页内容

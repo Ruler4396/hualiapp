@@ -16,6 +16,10 @@ interface DatePickerResult {
   day: number;
 }
 
+interface DialogResult {
+  index: number;
+}
+
 @Component
 export struct Anniversary {
   @State anniversaryList: AnniversaryItem[] = [];
@@ -122,7 +126,19 @@ export struct Anniversary {
   async toggleFavorite(id: string) {
     const index = this.anniversaryList.findIndex(item => item.id === id);
     if (index !== -1) {
-      this.anniversaryList[index].isFavorite = !this.anniversaryList[index].isFavorite;
+      this.anniversaryList = this.anniversaryList.map((item, idx) => {
+        if (idx === index) {
+          return {
+            id: item.id,
+            title: item.title,
+            date: item.date,
+            days: item.days,
+            isFavorite: !item.isFavorite
+          };
+        }
+        return item;
+      });
+      
       try {
         if (!this.preferences) {
           return;
@@ -137,6 +153,29 @@ export struct Anniversary {
   }
 
   async deleteAnniversary(id: string) {
+    const item = this.anniversaryList.find(item => item.id === id);
+    if (item && item.isFavorite) {
+      try {
+        const result = await promptAction.showDialog({
+          title: '确认删除',
+          message: '确定要删除这个收藏的纪念日吗？',
+          buttons: [
+            { text: '取消', color: '#999999' },
+            { text: '确定', color: '#FF6B6B' }
+          ]
+        });
+        if (result.index === 1) {
+          this.doDeleteAnniversary(id);
+        }
+      } catch (err) {
+        console.error('Failed to show dialog:', err);
+      }
+    } else {
+      this.doDeleteAnniversary(id);
+    }
+  }
+
+  async doDeleteAnniversary(id: string) {
     this.anniversaryList = this.anniversaryList.filter(item => item.id !== id);
     try {
       if (!this.preferences) {
@@ -237,10 +276,9 @@ export struct Anniversary {
                 .fontSize(16)
                 .fontColor('#FF6B6B')
 
-              Image($r('app.media.favorite'))
+              Image(item.isFavorite ? $r('app.media.favorite_red') : $r('app.media.favorite_gray'))
                 .width(24)
                 .height(24)
-                .fillColor(item.isFavorite ? '#FFD700' : '#999999')
                 .margin({ left: 8 })
                 .onClick(() => {
                   this.toggleFavorite(item.id);
