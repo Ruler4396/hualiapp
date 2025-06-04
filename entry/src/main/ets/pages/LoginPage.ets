@@ -25,7 +25,7 @@ import {AxiosResponse} from '@ohos/axios'
  * CommonConstants: 包含应用程序中使用的常量，如输入长度、间距等。
  */
 import {CommonConstants} from '../common/constants/CommonConstants';
-import {login,sendCode} from '../http/Api';
+import {login, sendCode, passwordLogin} from '../http/Api';
 /**
  * 为 TextInput 组件扩展样式。
  * 定义了占位符颜色、高度、字体大小、背景色、宽度、边距等。
@@ -86,6 +86,11 @@ struct LoginPage {
   @State isShowProgress: boolean = false;             // 初始化不显示加载进度条
 
   /**
+   * 状态变量：是否使用密码登录。
+   */
+  @State isPasswordLogin: boolean = false;             // 添加登录方式状态
+
+  /**
    * 私有变量：定时器 ID，用于管理登录延迟。
    */
   private timeOutId: number = -1;                     // 初始化定时器 ID 为 -1，表示未设置
@@ -108,38 +113,44 @@ struct LoginPage {
    * 登录方法：处理登录逻辑。
    * 检查账户和密码是否为空，若不为空则显示加载进度条并模拟登录。
    */
-  /*
-  login(): void {
-    if (this.account === '' || this.password === '') { // 如果账户或密码为空
-      promptAction.showToast({                        // 显示提示信息
-        message: $r('app.string.input_empty_tips')    // 提示内容为“输入为空”
-      });
-    } else {                                          // 如果账户和密码均不为空
-      if (this.account === '123' && this.password === '123456') {        // 如果定时器未设置
-
-        router.replaceUrl({ url: 'pages/MainPage' }); // 跳转到主页面
-
-      }else{
-        promptAction.showToast({                        // 显示提示信息
-          message: $r('app.string.incorrect_account_or_password')    // 提示内容为“输入为空”
-        });
-      }
-    }
-  }
-*/
   async login(): Promise<void> {
-    if (this.account === '' || this.password === '') { // 如果账户或密码为空
-      promptAction.showToast({ // 显示提示信息
-        message: $r('app.string.input_empty_tips') // 提示内容为"输入为空"
+    if (this.account === '' || this.password === '') {
+      promptAction.showToast({
+        message: $r('app.string.input_empty_tips')
       });
-    } else { // 如果账户和密码均不为空
-      //todo: 登录
-      const response: AxiosResponse = await login(this.account, this.password)
-      this.token = response.data.data
-      console.log('打印token', this.token)
-      router.replaceUrl({ url: 'pages/MainPage' }); // 跳转到主页面
+      return;
+    }
+
+    // 测试账号登录
+    if (this.account === '123' && this.password === '123456') {
+      router.replaceUrl({ url: 'pages/MainPage' });
+      return;
+    }
+
+    try {
+      this.isShowProgress = true;
+      let response: AxiosResponse;
+      
+      if (this.isPasswordLogin) {
+        // 密码登录
+        response = await passwordLogin(this.account, this.password);
+      } else {
+        // 验证码登录
+        response = await login(this.account, this.password);
+      }
+      
+      this.token = response.data.data;
+      console.log('打印token', this.token);
+      router.replaceUrl({ url: 'pages/MainPage' });
+    } catch (error) {
+      promptAction.showToast({
+        message: error.message || '登录失败'
+      });
+    } finally {
+      this.isShowProgress = false;
     }
   }
+
   /**
    * 页面即将消失时调用，清除定时器。
    */
@@ -160,7 +171,7 @@ struct LoginPage {
         .margin({ top: $r('app.float.logo_margin_top'), bottom: $r('app.float.logo_margin_bottom') }) // 设置上下外边距
 
       // 页面标题
-      Text($r('app.string.huali_college'))               // 显示“登录”标题
+      Text($r('app.string.huali_college'))               // 显示"登录"标题
         .fontSize($r('app.float.page_title_text_size')) // 设置标题字体大小
         .fontWeight(FontWeight.Medium)                // 设置标题字体粗细
         .fontColor($r('app.color.title_text_color'))  // 设置标题字体颜色
@@ -172,7 +183,7 @@ struct LoginPage {
         .margin({ bottom: $r('app.float.login_more_margin_bottom'), top: $r('app.float.login_more_margin_top') }) // 设置上下外边距
 
       // 账户输入框
-      TextInput({ placeholder: $r('app.string.account') }) // 创建账户输入框，占位符为“账户”
+      TextInput({ placeholder: $r('app.string.account') }) // 创建账户输入框，占位符为"账户"
         .maxLength(CommonConstants.INPUT_ACCOUNT_LENGTH) // 设置最大输入长度
         .type(InputType.Number)                        // 设置输入类型为数字
         .inputStyle()                                  // 应用自定义输入框样式
@@ -182,10 +193,13 @@ struct LoginPage {
       // 分割线
       Line().lineStyle()                               // 添加分割线并应用自定义样式
 
-      // 密码输入框
-      TextInput({ placeholder: $r('app.string.password'),text:this.password }) // 创建密码输入框，占位符为“密码”
+      // 密码/验证码输入框
+      TextInput({ 
+        placeholder: this.isPasswordLogin ? $r('app.string.password') : $r('app.string.verification_code'),
+        text: this.password 
+      })
         .maxLength(CommonConstants.INPUT_PASSWORD_LENGTH) // 设置最大输入长度
-        .type(InputType.Password)                      // 设置输入类型为密码
+        .type(this.isPasswordLogin ? InputType.Password : InputType.Number) // 设置输入类型为密码或验证码
         .inputStyle()                                  // 应用自定义输入框样式
         .onChange((value: string) => {                 // 监听输入变化
           this.password = value;                       // 更新密码状态变量
@@ -193,23 +207,48 @@ struct LoginPage {
       // 分割线
       Line().lineStyle()                               // 添加分割线并应用自定义样式
 
-      // 短信登录和忘记密码文本
-      Row() {                                          // 使用行布局排列两个文本
-        Text($r('app.string.message_login')).blueTextStyle() // 显示“短信登录”并应用蓝色样式
-          .onClick(async () => {
-            //todo: 获取验证码
-            const response: AxiosResponse = await sendCode(this.account);
-            this.password = response.data.data;
+      // 登录方式切换和忘记密码
+      Row() {
+        Text(this.isPasswordLogin ? $r('app.string.message_login') : $r('app.string.password_login'))
+          .blueTextStyle()
+          .onClick(() => {
+            this.isPasswordLogin = !this.isPasswordLogin;
+            this.password = ''; // 切换时清空密码/验证码
           })
 
-        Text($r('app.string.forgot_password')).blueTextStyle() // 显示“忘记密码”并应用蓝色样式
+        if (this.isPasswordLogin) {
+          Text($r('app.string.forgot_password'))
+            .blueTextStyle()
+        } else {
+          Text($r('app.string.get_code'))
+            .blueTextStyle()
+            .onClick(async () => {
+              if (!this.account) {
+                promptAction.showToast({
+                  message: '请输入手机号'
+                });
+                return;
+              }
+              try {
+                const response: AxiosResponse = await sendCode(this.account);
+                this.password = response.data.data; // 自动填写验证码
+                promptAction.showToast({
+                  message: '验证码已发送'
+                });
+              } catch (error) {
+                promptAction.showToast({
+                  message: error.message || '发送失败'
+                });
+              }
+            })
+        }
       }
       .justifyContent(FlexAlign.SpaceBetween)          // 设置两端对齐
       .width(CommonConstants.FULL_PARENT)              // 设置宽度为父组件的100%
       .margin({ top: $r('app.float.forgot_margin_top') }) // 设置上外边距
 
       // 登录按钮
-      Button($r('app.string.login'), { type: ButtonType.Capsule }) // 创建“登录”按钮，胶囊形状
+      Button($r('app.string.login'), { type: ButtonType.Capsule }) // 创建"登录"按钮，胶囊形状
         .width(CommonConstants.BUTTON_WIDTH)           // 设置按钮宽度
         .height($r('app.float.login_button_height'))   // 设置按钮高度
         .fontSize($r('app.float.normal_text_size'))    // 设置按钮字体大小
@@ -221,7 +260,7 @@ struct LoginPage {
         })
 
       // 注册账户文本
-      Text($r('app.string.register_account'))          // 显示“注册账户”
+      Text($r('app.string.register_account'))          // 显示"注册账户"
         .fontColor($r('app.color.login_blue_text_color')) // 设置字体颜色为蓝色
         .fontSize($r('app.float.normal_text_size'))    // 设置字体大小
         .fontWeight(FontWeight.Medium)                 // 设置字体粗细
@@ -239,7 +278,7 @@ struct LoginPage {
       Blank()                                          // 添加空白组件，占据剩余空间
 
       // 其他登录方式文本
-      Text($r('app.string.other_login_method'))        // 显示“其他登录方式”
+      Text($r('app.string.other_login_method'))        // 显示"其他登录方式"
         .fontColor($r('app.color.other_login_text_color')) // 设置字体颜色
         .fontSize($r('app.float.little_text_size'))    // 设置字体大小
         .fontWeight(FontWeight.Medium)                 // 设置字体粗细

@@ -316,6 +316,18 @@
     {
       "name": "nickname",
       "value": "Nickname"
+    },
+    {
+      "name": "verification_code",
+      "value": "Verification Code"
+    },
+    {
+      "name": "password_login",
+      "value": "Password Login"
+    },
+    {
+      "name": "get_code",
+      "value": "Get Code"
     }
   ]
 }

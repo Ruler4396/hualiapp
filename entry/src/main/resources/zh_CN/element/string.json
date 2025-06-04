@@ -341,7 +341,18 @@
     {
       "name": "email",
       "value": "邮箱"
+    },
+    {
+      "name": "verification_code",
+      "value": "验证码"
+    },
+    {
+      "name": "password_login",
+      "value": "密码登录"
+    },
+    {
+      "name": "get_code",
+      "value": "获取验证码"
     }
-
   ]
 }

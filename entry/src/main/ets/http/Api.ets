@@ -11,10 +11,21 @@ interface loginData {
   code: string
 }
 
+interface passwordLoginData {
+  phone: string,
+  password: string
+}
+
 // 登录
 export function login(phone: string, code: string) {
   const data: loginData = { phone: phone, code: code };
   return instance.post('/word/user/login', data);
+}
+
+// 密码登录
+export function passwordLogin(phone: string, password: string) {
+  const data: passwordLoginData = { phone: phone, password: password };
+  return instance.post('/word/user/passwordLogin', data);
 }
 
 interface CreatePostData {
