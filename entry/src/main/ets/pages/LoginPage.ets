@@ -19,13 +19,13 @@
  * router: 用于页面跳转。
  */
 import { promptAction, router } from '@kit.ArkUI';
-
+import {AxiosResponse} from '@ohos/axios'
 /**
  * 导入自定义的通用常量模块。
  * CommonConstants: 包含应用程序中使用的常量，如输入长度、间距等。
  */
 import {CommonConstants} from '../common/constants/CommonConstants';
-
+import {login,sendCode} from '../http/Api';
 /**
  * 为 TextInput 组件扩展样式。
  * 定义了占位符颜色、高度、字体大小、背景色、宽度、边距等。
@@ -89,7 +89,7 @@ struct LoginPage {
    * 私有变量：定时器 ID，用于管理登录延迟。
    */
   private timeOutId: number = -1;                     // 初始化定时器 ID 为 -1，表示未设置
-
+  @StorageLink('token') token: string =''
   /**
    * 构建器：创建圆形图片按钮。
    * @param src 图片资源。
@@ -108,6 +108,7 @@ struct LoginPage {
    * 登录方法：处理登录逻辑。
    * 检查账户和密码是否为空，若不为空则显示加载进度条并模拟登录。
    */
+  /*
   login(): void {
     if (this.account === '' || this.password === '') { // 如果账户或密码为空
       promptAction.showToast({                        // 显示提示信息
@@ -125,7 +126,20 @@ struct LoginPage {
       }
     }
   }
-
+*/
+  async login(): Promise<void> {
+    if (this.account === '' || this.password === '') { // 如果账户或密码为空
+      promptAction.showToast({ // 显示提示信息
+        message: $r('app.string.input_empty_tips') // 提示内容为"输入为空"
+      });
+    } else { // 如果账户和密码均不为空
+      //todo: 登录
+      const response: AxiosResponse = await login(this.account, this.password)
+      this.token = response.data.data
+      console.log('打印token', this.token)
+      router.replaceUrl({ url: 'pages/MainPage' }); // 跳转到主页面
+    }
+  }
   /**
    * 页面即将消失时调用，清除定时器。
    */
@@ -169,7 +183,7 @@ struct LoginPage {
       Line().lineStyle()                               // 添加分割线并应用自定义样式
 
       // 密码输入框
-      TextInput({ placeholder: $r('app.string.password') }) // 创建密码输入框，占位符为“密码”
+      TextInput({ placeholder: $r('app.string.password'),text:this.password }) // 创建密码输入框，占位符为“密码”
         .maxLength(CommonConstants.INPUT_PASSWORD_LENGTH) // 设置最大输入长度
         .type(InputType.Password)                      // 设置输入类型为密码
         .inputStyle()                                  // 应用自定义输入框样式
@@ -182,6 +196,12 @@ struct LoginPage {
       // 短信登录和忘记密码文本
       Row() {                                          // 使用行布局排列两个文本
         Text($r('app.string.message_login')).blueTextStyle() // 显示“短信登录”并应用蓝色样式
+          .onClick(async () => {
+            //todo: 获取验证码
+            const response: AxiosResponse = await sendCode(this.account);
+            this.password = response.data.data;
+          })
+
         Text($r('app.string.forgot_password')).blueTextStyle() // 显示“忘记密码”并应用蓝色样式
       }
       .justifyContent(FlexAlign.SpaceBetween)          // 设置两端对齐

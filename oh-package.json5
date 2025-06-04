@@ -1,12 +1,14 @@
 {
   "modelVersion": "5.0.2",
   "license": "",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "author": "",
   "name": "arktscomponents",
   "description": "Please describe the basic information.",
   "main": "",
   "version": "1.0.0",
-  "dependencies": {}
+  "dependencies": {
+    "@ohos/axios": "^2.2.6"
+  },
+  "dynamicDependencies": {}
 }
